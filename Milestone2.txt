@@ -1,0 +1,19 @@
+﻿Jason, Brayden, Amaan
+
+
+Find your calm with Tranquility, a meditation companion designed to help you achieve mindfulness at your own pace. Tranquility offers customizable timers for your meditation sessions, allowing you to set durations that fit your schedule, from quick breathing exercises to extended relaxation.
+Easily track your journey with our session history feature, where past meditations are saved to help you see your growth over time. With each meditation recorded, you’ll have insights into your practice patterns, helping you establish consistency and deepen your experience. Whether you’re new to meditation or a seasoned practitioner, Tranquility is here to guide you toward inner peace, one mindful moment at a time.
+
+
+Scope: 
+
+The app will have a login and sign up feature to store the created users in a database. It will have a screen to set up a time you wish to meditate for, and then start a timer that will count down until you are done, when done it will store the day and the length of the meditation in the database. It will also have a screen that shows all of your past meditations, with their time and the day it was done. It will also have an AI chat screen to help with any questions about meditations or health concerns, using MLkit. You will be able to navigate through these screens using a menu.For the parameters to be saved, we will have a theme for the color, and music that will be played during the meditations.
+  
+
+Design: Figma basics – Figma
+Firebase: Database
+
+
+
+
+User Stories:
