@@ -1,6 +1,8 @@
 package com.example.myapplication.Screens
 
 import android.annotation.SuppressLint
+import android.app.TimePickerDialog
+import android.widget.TimePicker
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,16 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun TimerWithProgressBar() {
-    var timeElapsed by remember { mutableStateOf(60) }
-    val totalTime = 60
-    val progress = (totalTime - timeElapsed) / totalTime.toFloat()
+    var timeElapsed by remember { mutableStateOf(600) }
     var isRunning by remember { mutableStateOf(false) }
+
+    var selectedTime by remember { mutableStateOf(10) }
+    val totalTimeInSeconds = selectedTime * 60
+
+    val progress = (totalTimeInSeconds - timeElapsed) / totalTimeInSeconds.toFloat()
+
+    val context = LocalContext.current
 
     LaunchedEffect(isRunning) {
         while (isRunning && timeElapsed > 0) {
@@ -27,14 +35,28 @@ fun TimerWithProgressBar() {
         }
     }
 
+    val timePickerListener = TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay: Int, minute: Int ->
+        selectedTime = (hourOfDay * 60) + minute
+        timeElapsed = selectedTime * 60
+    }
+
+    val showTimePicker = {
+        TimePickerDialog(
+            context,
+            timePickerListener,
+            0,
+            10,
+            true
+        ).show()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.Center
     ) {
-
         CircularProgressIndicator(
             progress = { progress },
             modifier = Modifier
@@ -42,6 +64,8 @@ fun TimerWithProgressBar() {
                 .height(10.dp),
             color = MaterialTheme.colorScheme.primary,
         )
+        Spacer(modifier = Modifier.height(32.dp))
+
 
         Text(
             text = String.format("%02d:%02d", timeElapsed / 60, timeElapsed % 60),
@@ -56,12 +80,21 @@ fun TimerWithProgressBar() {
             )
         }
 
+        Spacer(modifier = Modifier.height(200.dp))
+
+        Button(
+            onClick = showTimePicker
+        ) {
+            Text(
+                text = "Select Time",
+                style = TextStyle(fontSize = 18.sp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = {
-                isRunning = !isRunning
-            }
+            onClick = { isRunning = !isRunning }
         ) {
             Text(
                 text = if (isRunning) "Stop Timer" else "Start Timer",
