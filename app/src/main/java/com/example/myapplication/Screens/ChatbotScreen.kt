@@ -1,7 +1,7 @@
 package com.example.myapplication.Screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -20,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+
 
 @Composable
 fun ChatbotScreen() {
@@ -67,7 +68,7 @@ fun ChatbotScreen() {
                         userInput = ""
                         coroutineScope.launch {
                             val response = getChatbotResponse(input)
-                            chatMessages.add("Chatbot" to (response ?: "No response"))
+                            chatMessages.add("Chatbot" to response)
                         }
                     }
                 }
@@ -79,30 +80,59 @@ fun ChatbotScreen() {
 }
 
 // Retrofit setup and API call
+private val retrofit by lazy {
+    Retrofit.Builder()
+        .baseUrl("https://api.openai.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+}
+
+private val openAiService by lazy {
+    retrofit.create(OpenAiService::class.java)
+}
+
 interface OpenAiService {
-    @Headers("Authorization: Bearer YOUR_OPENAI_API_KEY", "Content-Type: application/json")
+    @Headers(
+        "Authorization: Bearer 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", // Replace with actual API key
+        "Content-Type: application/json"
+    )
     @POST("v1/chat/completions")
     suspend fun getChatResponse(@Body request: ChatRequest): ChatResponse
 }
 
-suspend fun getChatbotResponse(userMessage: String): String? {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.openai.com/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    val service = retrofit.create(OpenAiService::class.java)
+suspend fun getChatbotResponse(userMessage: String): String {
+    val messages = listOf(ChatMessage(role = "user", content = userMessage))
+    val request = ChatRequest(model = "gpt-3.5-turbo", messages = messages,
+        max_tokens = 150)
 
-    val messages = listOf(mapOf("role" to "user", "content" to userMessage))
-    val request = ChatRequest(model = "gpt-3.5-turbo", messages = messages)
     return try {
-        val response = service.getChatResponse(request)
-        response.choices.firstOrNull()?.message?.get("content")
+        val response = openAiService.getChatResponse(request)
+        response.choices.firstOrNull()?.message?.content ?: "No response"
     } catch (e: Exception) {
-        "Error: ${e.message}"
+        Log.e("Chatbot", "Error: ${e.message}")
+        "Error: Unable to get a response"
     }
 }
 
-// Data classes for request/response
-data class ChatRequest(val model: String, val messages: List<Map<String, String>>)
-data class ChatResponse(val choices: List<Choice>)
-data class Choice(val message: Map<String, String>)
+//BAD I KNOW, CREATED NEW DATA CLASS OUTSIDE THIS FILE
+
+// Data classes for both the requests and responses from chat gpt
+data class ChatRequest(
+    val model: String,
+    val messages: List<ChatMessage>,
+    val max_tokens: Int
+)
+
+data class ChatMessage(
+    val role: String,
+    val content: String
+)
+
+data class ChatResponse(
+    val choices: List<Choice>
+)
+
+data class Choice(
+    val message: ChatMessage
+)
+

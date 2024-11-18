@@ -68,4 +68,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation(libs.ui) // Replace with latest Compose version
+    implementation(libs.material3) // Compose Material3
+    implementation(libs.kotlinx.coroutines.android) // Kotlin Coroutines
+    implementation(libs.retrofit2.retrofit) // Retrofit
+    implementation(libs.retrofit2.converter.gson) // Gson Converter
 }
