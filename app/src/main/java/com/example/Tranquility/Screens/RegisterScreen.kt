@@ -1,4 +1,5 @@
 ﻿package com.example.Tranquility.Screens
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -10,14 +11,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(onRegisterSuccess: () -> Unit = {}) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    val auth = FirebaseAuth.getInstance()
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -109,7 +114,19 @@ fun RegisterScreen() {
             onClick = {
                 if (name.isNotBlank() && email.isNotBlank() && phoneNumber.isNotBlank() && password.isNotBlank()) {
                     errorMessage = ""
-                    // Handle registration logic here
+                    coroutineScope.launch {
+                        // Firebase registration logic
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    // Registration successful
+                                    onRegisterSuccess()
+                                } else {
+                                    // Registration failed
+                                    errorMessage = task.exception?.localizedMessage ?: "Registration failed"
+                                }
+                            }
+                    }
                 } else {
                     errorMessage = "Please fill in all fields"
                 }
@@ -126,3 +143,4 @@ fun RegisterScreen() {
 fun PreviewRegisterScreen() {
     RegisterScreen()
 }
+
