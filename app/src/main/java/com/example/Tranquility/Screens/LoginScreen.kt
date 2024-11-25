@@ -1,4 +1,3 @@
-package com.example.Tranquility.Screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,15 +10,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
-
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf("") }
+
+    val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     Column(
         modifier = Modifier
@@ -51,6 +51,7 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Password TextField
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -77,15 +78,34 @@ fun LoginScreen() {
             )
         }
 
+        if (successMessage.isNotEmpty()) {
+            Text(
+                text = successMessage,
+                color = Color.Green,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
-
-                    errorMessage = ""
+                    // Authenticate user with Firebase
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                successMessage = "Login successful!"
+                                errorMessage = ""
+                            } else {
+                                errorMessage = task.exception?.message ?: "Login failed"
+                                successMessage = ""
+                            }
+                        }
                 } else {
                     errorMessage = "Please fill in both fields"
+                    successMessage = ""
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -100,9 +120,6 @@ fun LoginScreen() {
         }
     }
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable
