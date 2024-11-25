@@ -1,4 +1,4 @@
-package com.example.myapplication.Screens
+package com.example.Tranquility.Screens
 
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog

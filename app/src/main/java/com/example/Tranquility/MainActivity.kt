@@ -1,11 +1,10 @@
-package com.example.myapplication
+package com.example.Tranquility
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import com.example.myapplication.Screens.TimerWithProgressBar
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.Tranquility.Screens.TimerWithProgressBar
+import com.example.Tranquility.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +12,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
 
-                TimerWithProgressBar()
+
             }
 
         }

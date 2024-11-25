@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "906285708723",
+    "project_id": "tranquility-c2720",
+    "storage_bucket": "tranquility-c2720.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906285708723:android:9f6d0c998748c679dd87c6",
+        "android_client_info": {
+          "package_name": "com.example.Tranquility"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXhwM1ow2nJHEjaOkwODZ7Huk1AhkkfFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
