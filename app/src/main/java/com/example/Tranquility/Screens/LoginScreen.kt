@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onRegisterClick : () -> Unit,
+    onLogin : () -> Unit
+
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -98,6 +102,7 @@ fun LoginScreen() {
                             if (task.isSuccessful) {
                                 successMessage = "Login successful!"
                                 errorMessage = ""
+                                onLogin()
                             } else {
                                 errorMessage = task.exception?.message ?: "Login failed"
                                 successMessage = ""
@@ -115,7 +120,7 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = { /* Navigate to Register Screen */ }) {
+        TextButton(onClick = { onRegisterClick()}) {
             Text("Don't have an account? Register", color = MaterialTheme.colorScheme.secondary)
         }
     }
@@ -124,5 +129,5 @@ fun LoginScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen()
+    LoginScreen({}, {})
 }

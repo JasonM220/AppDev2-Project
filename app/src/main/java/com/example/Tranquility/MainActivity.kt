@@ -5,6 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.Tranquility.Navigation.Screen
+import com.example.Tranquility.Screens.RegisterScreen
 import com.example.Tranquility.Screens.TimerWithProgressBar
 import com.example.Tranquility.ui.theme.MyApplicationTheme
 import com.google.firebase.FirebaseApp
@@ -20,10 +26,45 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             MyApplicationTheme {
-                LoginScreen()
+                AppNavHost()
 
             }
 
         }
     }
+
+    // QuizAppNavHost manages the navigation between Quiz, Result, and About screens
+    @Composable
+    fun AppNavHost() {
+        // Initialize NavController for navigation between screens
+        val navController = rememberNavController()
+
+        NavHost(navController = navController, startDestination = Screen.Login.route) {
+
+            composable(Screen.Login.route) {
+                LoginScreen(
+                    onLogin = {navController.navigate(Screen.Timer.route)},
+                    onRegisterClick = { navController.navigate(Screen.Register.route) }, // Navigate to About screen
+                )
+            }
+
+            composable(Screen.Register.route) {
+                RegisterScreen(
+                    returnToLogin = { navController.navigate(Screen.Login.route) }
+                )
+            }
+
+            composable(Screen.Timer.route) {
+                TimerWithProgressBar()
+            }
+
+            composable(Screen.Log.route) {
+
+            }
+            composable(Screen.Chat.route) {
+
+            }
+        }
+    }
+
 }
