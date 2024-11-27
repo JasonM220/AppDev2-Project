@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen(onRegisterSuccess: () -> Unit = {}) {
+fun RegisterScreen(returnToLogin: () -> Unit = {},) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
@@ -120,7 +120,7 @@ fun RegisterScreen(onRegisterSuccess: () -> Unit = {}) {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     // Registration successful
-                                    onRegisterSuccess()
+                                    returnToLogin()
                                 } else {
                                     // Registration failed
                                     errorMessage = task.exception?.localizedMessage ?: "Registration failed"
@@ -135,12 +135,16 @@ fun RegisterScreen(onRegisterSuccess: () -> Unit = {}) {
         ) {
             Text("Register")
         }
+
+        TextButton(onClick = { returnToLogin()}) {
+            Text("Have an account? Login", color = MaterialTheme.colorScheme.secondary)
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegisterScreen() {
-    RegisterScreen()
+    RegisterScreen({})
 }
 
