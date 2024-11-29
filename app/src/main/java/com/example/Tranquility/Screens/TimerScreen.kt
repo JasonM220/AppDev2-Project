@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -32,6 +36,9 @@ fun TimerWithProgressBar() {
         while (isRunning && timeElapsed > 0) {
             delay(1000)
             timeElapsed -= 1
+        }
+        if (timeElapsed == 0) {
+            saveTimerData(selectedTime)
         }
     }
 
@@ -58,14 +65,13 @@ fun TimerWithProgressBar() {
         verticalArrangement = Arrangement.Center
     ) {
         CircularProgressIndicator(
-            progress = { progress },
+            progress = progress,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(10.dp),
             color = MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.height(32.dp))
-
 
         Text(
             text = String.format("%02d:%02d", timeElapsed / 60, timeElapsed % 60),
@@ -101,5 +107,36 @@ fun TimerWithProgressBar() {
                 style = TextStyle(fontSize = 18.sp)
             )
         }
+    }
+}
+
+// Save Timer Data Function
+private fun saveTimerData(meditationTime: Int) {
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+
+    val user = auth.currentUser
+    if (user != null) {
+        val uid = user.uid
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDateTime = currentDateTime.format(formatter)
+
+        // Data to store
+        val meditationData = hashMapOf(
+            "userId" to uid,
+            "dateTime" to formattedDateTime,
+            "meditationTime" to meditationTime // Rename field here
+        )
+
+        // Save to Firestore
+        firestore.collection("meditationSessions") // You can rename this collection too
+            .add(meditationData)
+            .addOnSuccessListener {
+                println("Meditation data successfully saved!")
+            }
+            .addOnFailureListener { e ->
+                println("Error saving meditation data: $e")
+            }
     }
 }
