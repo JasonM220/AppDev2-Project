@@ -15,9 +15,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.Tranquility.Navigation.Screen
+import com.example.Tranquility.Repositories.MeditationLogRepository
+import com.example.Tranquility.Screens.MeditationLogScreen
 import com.example.Tranquility.Navigation.TopNavBar
 import com.example.Tranquility.Screens.RegisterScreen
 import com.example.Tranquility.Screens.TimerWithProgressBar
+import com.example.Tranquility.ViewModels.MeditationLogViewModel
 import com.example.Tranquility.ui.theme.MyApplicationTheme
 import com.google.firebase.FirebaseApp
 
@@ -30,9 +33,13 @@ class MainActivity : ComponentActivity() {
         } catch (e: Exception) {
             Log.e("FirebaseInit", "Firebase initialization failed: ${e.message}")
         }
+
+        val meditationRepo = MeditationLogRepository()
+        val meditationViewModel = MeditationLogViewModel(meditationRepo)
+
         setContent {
             MyApplicationTheme {
-                AppNavHost()
+                AppNavHost(meditationViewModel)
 
             }
 
@@ -41,7 +48,8 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
-    fun AppNavHost() {
+    fun AppNavHost(meditationViewModel: MeditationLogViewModel) {
+        // Initialize NavController for navigation between screens
         val navController = rememberNavController()
 
         NavHost(navController = navController, startDestination = Screen.Login.route) {
@@ -73,7 +81,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            composable(Screen.Log.route) {
+            composable(Screen.Chat.route) {
+                //merge proof-of-concept i.e just copy paste
                 Scaffold(
                     topBar = {
                         TopNavBar(navController = navController, onLogout = {
