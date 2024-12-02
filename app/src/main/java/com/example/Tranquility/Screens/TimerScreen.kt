@@ -65,7 +65,7 @@ fun TimerWithProgressBar() {
         verticalArrangement = Arrangement.Center
     ) {
         CircularProgressIndicator(
-            progress = progress,
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(10.dp),
@@ -122,15 +122,13 @@ private fun saveTimerData(meditationTime: Int) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val formattedDateTime = currentDateTime.format(formatter)
 
-        // Data to store
         val meditationData = hashMapOf(
             "userId" to uid,
             "dateTime" to formattedDateTime,
-            "meditationTime" to meditationTime // Rename field here
+            "meditationTime" to meditationTime
         )
 
-        // Save to Firestore
-        firestore.collection("meditationSessions") // You can rename this collection too
+        firestore.collection("meditationSessions")
             .add(meditationData)
             .addOnSuccessListener {
                 println("Meditation data successfully saved!")
