@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            composable(Screen.Chat.route) {
+            composable(Screen.Log.route) {
                 //merge proof-of-concept i.e just copy paste
                 Scaffold(
                     topBar = {
@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         })
                     }
                 ) {
-                    Text("Log Screen Content")
+                    MeditationLogScreen(meditationViewModel)
                 }
             }
             composable(Screen.Chat.route) {
