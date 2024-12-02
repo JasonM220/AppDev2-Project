@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +36,6 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Name TextField
         TextField(
             value = name,
             onValueChange = { name = it },
@@ -51,7 +51,6 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email TextField
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -67,7 +66,6 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Phone Number TextField
         TextField(
             value = phoneNumber,
             onValueChange = { phoneNumber = it },
@@ -83,7 +81,6 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password TextField
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -109,20 +106,27 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Register Button
         Button(
             onClick = {
                 if (name.isNotBlank() && email.isNotBlank() && phoneNumber.isNotBlank() && password.isNotBlank()) {
                     errorMessage = ""
                     coroutineScope.launch {
-                        // Firebase registration logic
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    // Registration successful
-                                    returnToLogin()
+                                    val user = auth.currentUser
+                                    user?.updateProfile(
+                                        userProfileChangeRequest {
+                                            displayName = name
+                                        }
+                                    )?.addOnCompleteListener { profileTask ->
+                                        if (profileTask.isSuccessful) {
+                                            returnToLogin()
+                                        } else {
+                                            errorMessage = "Failed to update profile"
+                                        }
+                                    }
                                 } else {
-                                    // Registration failed
                                     errorMessage = task.exception?.localizedMessage ?: "Registration failed"
                                 }
                             }

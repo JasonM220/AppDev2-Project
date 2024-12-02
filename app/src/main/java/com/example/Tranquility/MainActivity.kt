@@ -1,17 +1,23 @@
 package com.example.Tranquility
 
 import LoginScreen
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.Tranquility.Navigation.Screen
 import com.example.Tranquility.Repositories.MeditationLogRepository
 import com.example.Tranquility.Screens.MeditationLogScreen
+import com.example.Tranquility.Navigation.TopNavBar
 import com.example.Tranquility.Screens.RegisterScreen
 import com.example.Tranquility.Screens.TimerWithProgressBar
 import com.example.Tranquility.ViewModels.MeditationLogViewModel
@@ -40,7 +46,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // QuizAppNavHost manages the navigation between Quiz, Result, and About screens
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     fun AppNavHost(meditationViewModel: MeditationLogViewModel) {
         // Initialize NavController for navigation between screens
@@ -62,14 +68,45 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(Screen.Timer.route) {
-                TimerWithProgressBar()
+                Scaffold(
+                    topBar = {
+                        TopNavBar(navController = navController, onLogout = {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        })
+                    }
+                ) {
+                    TimerWithProgressBar()
+                }
             }
 
-            composable(Screen.Log.route) {
-                MeditationLogScreen(meditationViewModel)
-            }
             composable(Screen.Chat.route) {
                 //merge proof-of-concept i.e just copy paste
+                Scaffold(
+                    topBar = {
+                        TopNavBar(navController = navController, onLogout = {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        })
+                    }
+                ) {
+                    Text("Log Screen Content")
+                }
+            }
+            composable(Screen.Chat.route) {
+                Scaffold(
+                    topBar = {
+                        TopNavBar(navController = navController, onLogout = {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        })
+                    }
+                ) {
+                    Text("Chat Screen Content")
+                }
             }
         }
     }
