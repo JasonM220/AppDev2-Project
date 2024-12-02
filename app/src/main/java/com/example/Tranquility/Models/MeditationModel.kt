@@ -1,7 +1,7 @@
 package com.example.Tranquility.Models
 
 data class MeditationLog(
-    val dateTime: String = "",
-    val meditationTime: Int = 0,
-    //val userId: String = ""
+    var dateTime: String = "",
+    var meditationTime: Int = 0,
+    var userId: String = ""         //filtering by user
 )

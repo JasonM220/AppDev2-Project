@@ -1,6 +1,6 @@
 package com.example.Tranquility.Screens
 
-import android.annotation.SuppressLint
+
 import android.app.TimePickerDialog
 import android.widget.TimePicker
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,6 @@ import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@SuppressLint("DefaultLocale")
 @Composable
 fun TimerWithProgressBar() {
     var timeElapsed by remember { mutableStateOf(600) }
