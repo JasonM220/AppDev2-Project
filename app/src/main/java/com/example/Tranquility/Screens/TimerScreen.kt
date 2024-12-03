@@ -56,7 +56,7 @@ fun TimerWithProgressBar() {
                 )
             )
         },
-        containerColor = Color(0xFF40E0D0)
+        containerColor = Color(0xFFA7D8DE)
     ) { innerPadding ->
         Column(
             modifier = Modifier
