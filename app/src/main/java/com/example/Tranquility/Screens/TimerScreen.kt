@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.Tranquility.Models.MeditationLog
+import com.example.Tranquility.ViewModels.MeditationLogViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
@@ -23,7 +25,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimerWithProgressBar() {
+fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
     var timeElapsed by remember { mutableStateOf(600) }
     var isRunning by remember { mutableStateOf(false) }
 
@@ -32,7 +34,6 @@ fun TimerWithProgressBar() {
     val progress = (totalTimeInSeconds - timeElapsed) / totalTimeInSeconds.toFloat()
 
     var showTimePicker by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     LaunchedEffect(isRunning) {
         while (isRunning && timeElapsed > 0) {
@@ -40,16 +41,14 @@ fun TimerWithProgressBar() {
             timeElapsed -= 1
         }
         if (timeElapsed == 0) {
-            saveTimerData(selectedTime)
+            saveTimerData(viewModel, selectedTime) // Use ViewModel to save data
         }
     }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text("Meditation Timer", style = TextStyle(fontSize = 20.sp))
-                },
+                title = { Text("Meditation Timer", style = TextStyle(fontSize = 20.sp)) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -74,12 +73,12 @@ fun TimerWithProgressBar() {
                     .background(MaterialTheme.colorScheme.secondaryContainer, shape = CircleShape)
             ) {
                 CircularProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .size(180.dp)
                         .padding(10.dp),
                     color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 8.dp
+                    strokeWidth = 8.dp,
                 )
                 Text(
                     text = String.format("%02d:%02d", timeElapsed / 60, timeElapsed % 60),
@@ -101,14 +100,9 @@ fun TimerWithProgressBar() {
             Button(
                 onClick = { showTimePicker = true },
                 modifier = Modifier.fillMaxWidth(0.7f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
-                )
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
             ) {
-                Text(
-                    text = "Select Time",
-                    style = TextStyle(fontSize = 18.sp, color = MaterialTheme.colorScheme.onTertiary)
-                )
+                Text(text = "Select Time", style = TextStyle(fontSize = 18.sp, color = MaterialTheme.colorScheme.onTertiary))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,6 +134,21 @@ fun TimerWithProgressBar() {
         }
     }
 }
+
+// Save Timer Data Function
+private fun saveTimerData(viewModel: MeditationLogViewModel, meditationTime: Int) {
+    val currentDateTime = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formattedDateTime = currentDateTime.format(formatter)
+
+    val meditationLog = MeditationLog(
+        dateTime = formattedDateTime,
+        meditationTime = meditationTime
+    )
+
+    viewModel.addMeditationLog(meditationLog)
+}
+
 
 @Composable
 fun CustomTimePickerDialog(

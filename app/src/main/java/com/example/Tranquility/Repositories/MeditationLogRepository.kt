@@ -64,4 +64,24 @@ class MeditationLogRepository {
             Log.e("MeditationLogRepository", "Error deleting meditation log", e)
         }
     }
+
+    suspend fun addMeditationLog(log: MeditationLog) {
+        try {
+            val currentUser = auth.currentUser
+            if (currentUser == null) {
+                Log.e("MeditationLogRepository", "No logged-in user found")
+                return
+            }
+
+            // Ensure the userId is set correctly
+            log.userId = currentUser.uid
+
+            // Add the meditation log to Firestore
+            db.collection("meditationSessions").add(log).await()
+            Log.d("MeditationLogRepository", "Meditation log added successfully")
+        } catch (e: Exception) {
+            Log.e("MeditationLogRepository", "Error adding meditation log", e)
+        }
+    }
+
 }

@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         })
                     }
                 ) {
-                    TimerWithProgressBar()
+                    TimerWithProgressBar(meditationViewModel)
                 }
             }
 

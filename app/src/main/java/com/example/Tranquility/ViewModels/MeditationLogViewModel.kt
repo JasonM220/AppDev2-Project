@@ -31,4 +31,12 @@ class MeditationLogViewModel(private val repository: MeditationLogRepository) : 
             fetchMeditationLogs() //refresh upon deletion.
         }
     }
+
+    fun addMeditationLog(log: MeditationLog) {
+        viewModelScope.launch {
+            repository.addMeditationLog(log)
+            fetchMeditationLogs() // Refresh logs after adding a new one
+        }
+    }
+
 }
