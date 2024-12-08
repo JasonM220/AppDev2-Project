@@ -35,7 +35,7 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
         Text("Register", style = MaterialTheme.typography.titleLarge)
 
         Spacer(modifier = Modifier.height(32.dp))
-
+        // Name TextField
         TextField(
             value = name,
             onValueChange = { name = it },
@@ -50,7 +50,7 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        // Email TextField
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -65,7 +65,7 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        // Phone number TextField
         TextField(
             value = phoneNumber,
             onValueChange = { phoneNumber = it },
@@ -80,7 +80,7 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        // Password TextField
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -110,6 +110,7 @@ fun RegisterScreen(returnToLogin: () -> Unit = {},) {
             onClick = {
                 if (name.isNotBlank() && email.isNotBlank() && phoneNumber.isNotBlank() && password.isNotBlank()) {
                     errorMessage = ""
+                    // Create user with Firebase
                     coroutineScope.launch {
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
