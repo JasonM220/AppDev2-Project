@@ -26,25 +26,27 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
-    var timeElapsed by remember { mutableStateOf(600) }
+    // State to track elapsed time, timer status, and selected time
+    var timeElapsed by remember { mutableIntStateOf(600) }
     var isRunning by remember { mutableStateOf(false) }
-
-    var selectedTime by remember { mutableStateOf(10) }
-    val totalTimeInSeconds = selectedTime * 60
+    var selectedTime by remember { mutableStateOf(10) } // Default to 10 minutes
+    val totalTimeInSeconds = selectedTime * 60 // Convert selected time to seconds
     val progress = (totalTimeInSeconds - timeElapsed) / totalTimeInSeconds.toFloat()
-
     var showTimePicker by remember { mutableStateOf(false) }
 
+    // Timer logic that updates every second if running
     LaunchedEffect(isRunning) {
         while (isRunning && timeElapsed > 0) {
-            delay(1000)
-            timeElapsed -= 1
+            delay(1000) // Wait 1 second
+            timeElapsed -= 1 // Decrease the elapsed time
         }
+        // Save meditation log when timer reaches zero
         if (timeElapsed == 0) {
-            saveTimerData(viewModel, selectedTime) // Use ViewModel to save data
+            saveTimerData(viewModel, selectedTime)
         }
     }
 
+    // UI for the timer screen
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -55,7 +57,7 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
                 )
             )
         },
-        containerColor = Color(0xFFA7D8DE)
+        containerColor = Color(0xFFA7D8DE) // Background color for the screen
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -65,7 +67,7 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Circular Progress Bar
+            // Circular progress indicator for the timer
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -80,6 +82,7 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 8.dp,
                 )
+                // Display time remaining
                 Text(
                     text = String.format("%02d:%02d", timeElapsed / 60, timeElapsed % 60),
                     style = TextStyle(fontSize = 32.sp, color = MaterialTheme.colorScheme.onSecondaryContainer)
@@ -88,15 +91,17 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Display message when time is up
             if (timeElapsed == 0) {
                 Text(
-                    text = "Time's Up!",
+                    text = "Meditation Saved!",
                     style = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.error)
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Button to select meditation time
             Button(
                 onClick = { showTimePicker = true },
                 modifier = Modifier.fillMaxWidth(0.7f),
@@ -107,6 +112,7 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Button to start/stop the timer
             Button(
                 onClick = { isRunning = !isRunning },
                 modifier = Modifier.fillMaxWidth(0.7f),
@@ -120,13 +126,13 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
                 )
             }
 
-            // Show custom time picker dialog
+            // Show custom time picker dialog when the user selects time
             if (showTimePicker) {
                 CustomTimePickerDialog(
                     onDismiss = { showTimePicker = false },
                     onTimeSelected = { hour, minute ->
-                        selectedTime = hour * 60 + minute
-                        timeElapsed = selectedTime * 60
+                        selectedTime = hour * 60 + minute // Update selected time
+                        timeElapsed = selectedTime * 60 // Reset timer
                         showTimePicker = false
                     }
                 )
@@ -135,12 +141,13 @@ fun TimerWithProgressBar(viewModel: MeditationLogViewModel) {
     }
 }
 
-// Save Timer Data Function
+// Function to save meditation data using the ViewModel
 private fun saveTimerData(viewModel: MeditationLogViewModel, meditationTime: Int) {
     val currentDateTime = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDateTime = currentDateTime.format(formatter)
 
+    // Create a MeditationLog object and save it using the ViewModel
     val meditationLog = MeditationLog(
         dateTime = formattedDateTime,
         meditationTime = meditationTime
@@ -149,12 +156,13 @@ private fun saveTimerData(viewModel: MeditationLogViewModel, meditationTime: Int
     viewModel.addMeditationLog(meditationLog)
 }
 
-
+// Custom dialog for selecting time
 @Composable
 fun CustomTimePickerDialog(
     onDismiss: () -> Unit,
     onTimeSelected: (hour: Int, minute: Int) -> Unit
 ) {
+    // State to track selected hour and minute
     var hour by remember { mutableStateOf(0) }
     var minute by remember { mutableStateOf(10) }
 
@@ -165,15 +173,14 @@ fun CustomTimePickerDialog(
         },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                // Time Pickers
+                // Slider for selecting hours
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Hour Picker
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Hours: $hour", style = MaterialTheme.typography.bodySmall) // Show the selected hours
+                        Text("Hours: $hour", style = MaterialTheme.typography.bodySmall)
                         Slider(
                             value = hour.toFloat(),
                             onValueChange = { hour = it.toInt() },
@@ -185,14 +192,14 @@ fun CustomTimePickerDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Slider for selecting minutes
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Minute Picker
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Minutes: $minute", style = MaterialTheme.typography.bodySmall) // Show the selected minutes
+                        Text("Minutes: $minute", style = MaterialTheme.typography.bodySmall)
                         Slider(
                             value = minute.toFloat(),
                             onValueChange = { minute = it.toInt() },
@@ -217,32 +224,3 @@ fun CustomTimePickerDialog(
 }
 
 
-
-// Save Timer Data Function
-private fun saveTimerData(meditationTime: Int) {
-    val auth = FirebaseAuth.getInstance()
-    val firestore = FirebaseFirestore.getInstance()
-
-    val user = auth.currentUser
-    if (user != null) {
-        val uid = user.uid
-        val currentDateTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val formattedDateTime = currentDateTime.format(formatter)
-
-        val meditationData = hashMapOf(
-            "userId" to uid,
-            "dateTime" to formattedDateTime,
-            "meditationTime" to meditationTime
-        )
-
-        firestore.collection("meditationSessions")
-            .add(meditationData)
-            .addOnSuccessListener {
-                println("Meditation data successfully saved!")
-            }
-            .addOnFailureListener { e ->
-                println("Error saving meditation data: $e")
-            }
-    }
-}
