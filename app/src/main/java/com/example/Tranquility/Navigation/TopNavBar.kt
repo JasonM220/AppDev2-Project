@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 fun TopNavBar(navController: NavController, onLogout: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
-    val userName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Tranquility App"
+    val userName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Tranquility App" // Display username if available or "Tranquility App"
 
     TopAppBar(
         title = {

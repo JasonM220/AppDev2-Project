@@ -25,6 +25,7 @@ import com.example.Tranquility.viewmodels.ChatbotViewModel
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
+    // Initializes our database
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
@@ -59,13 +60,13 @@ class MainActivity : ComponentActivity() {
             composable(Screen.Login.route) {
                 LoginScreen(
                     onLogin = {navController.navigate(Screen.Timer.route)},
-                    onRegisterClick = { navController.navigate(Screen.Register.route) }, // Navigate to About screen
+                    onRegisterClick = { navController.navigate(Screen.Register.route) }, // Navigate to Register screen
                 )
             }
 
             composable(Screen.Register.route) {
                 RegisterScreen(
-                    returnToLogin = { navController.navigate(Screen.Login.route) }
+                    returnToLogin = { navController.navigate(Screen.Login.route) } // Navigate back to Login screen
                 )
             }
 
@@ -84,7 +85,6 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(Screen.Log.route) {
-                //merge proof-of-concept i.e just copy paste
                 Scaffold(
                     topBar = {
                         TopNavBar(navController = navController, onLogout = {
