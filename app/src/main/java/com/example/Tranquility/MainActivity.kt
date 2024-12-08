@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,10 +16,12 @@ import com.example.Tranquility.Navigation.Screen
 import com.example.Tranquility.Repositories.MeditationLogRepository
 import com.example.Tranquility.Screens.MeditationLogScreen
 import com.example.Tranquility.Navigation.TopNavBar
+import com.example.Tranquility.Screens.ChatbotScreen
 import com.example.Tranquility.Screens.RegisterScreen
 import com.example.Tranquility.Screens.TimerWithProgressBar
 import com.example.Tranquility.ViewModels.MeditationLogViewModel
 import com.example.Tranquility.ui.theme.MyApplicationTheme
+import com.example.Tranquility.viewmodels.ChatbotViewModel
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
@@ -37,9 +37,11 @@ class MainActivity : ComponentActivity() {
         val meditationRepo = MeditationLogRepository()
         val meditationViewModel = MeditationLogViewModel(meditationRepo)
 
+        val chatBotViewModel = ChatbotViewModel()
+
         setContent {
             MyApplicationTheme {
-                AppNavHost(meditationViewModel)
+                AppNavHost(meditationViewModel, chatBotViewModel)
 
             }
 
@@ -48,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
-    fun AppNavHost(meditationViewModel: MeditationLogViewModel) {
+    fun AppNavHost(meditationViewModel: MeditationLogViewModel, chatBotViewModel: ChatbotViewModel) {
         // Initialize NavController for navigation between screens
         val navController = rememberNavController()
 
@@ -95,19 +97,21 @@ class MainActivity : ComponentActivity() {
                     MeditationLogScreen(meditationViewModel)
                 }
             }
+
             composable(Screen.Chat.route) {
                 Scaffold(
                     topBar = {
                         TopNavBar(navController = navController, onLogout = {
-                            navController.navigate(Screen.Login.route) {
+                            navController.navigate(Screen.Chat.route) {
                                 popUpTo(Screen.Login.route) { inclusive = true }
                             }
                         })
                     }
                 ) {
-                    Text("Chat Screen Content")
+                    ChatbotScreen(chatBotViewModel)
                 }
             }
+
         }
     }
 

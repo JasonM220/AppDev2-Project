@@ -77,4 +77,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //chat bot screen
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
 }

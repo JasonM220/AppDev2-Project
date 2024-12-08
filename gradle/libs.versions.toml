@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+converterGson = "2.9.0"
 firebaseBom = "33.6.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
@@ -14,10 +15,12 @@ firebaseAuthKtx = "23.1.0"
 firebaseAuth = "23.1.0"
 navigationCompose = "2.8.4"
 firebaseFirestoreKtx = "25.1.1"
+retrofit = "2.9.0"
 runtimeLivedata = "1.7.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -39,6 +42,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
