@@ -17,7 +17,7 @@ class MeditationLogViewModel(private val repository: MeditationLogRepository) : 
         fetchMeditationLogs()
     }
 
-    private fun fetchMeditationLogs() {
+    fun fetchMeditationLogs() {
         viewModelScope.launch {
             repository.getMeditationLogs().collect { logs ->
                 _meditationLogs.value = logs
