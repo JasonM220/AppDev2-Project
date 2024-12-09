@@ -24,7 +24,6 @@ class MeditationLogRepository {
         val userId = currentUser.uid // gets the current id
         val snapshot = db.collection("meditationSessions")
             .whereEqualTo("userId", userId)
-            //.orderBy("dateTime", com.google.firebase.firestore.Query.Direction.DESCENDING) not working atm, filter for logs
             .get()
             .await()
 
@@ -32,7 +31,6 @@ class MeditationLogRepository {
             document.toObject(MeditationLog::class.java)
         }
 
-        //debugging shit
         Log.d("MeditationLogRepository", "Fetched documents: ${snapshot.documents}")
         emit(meditationLogs)
     }.catch { e ->
