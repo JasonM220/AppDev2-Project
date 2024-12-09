@@ -8,7 +8,7 @@ import retrofit2.http.POST
 import com.example.Tranquility.Models.ChatRequest
 import com.example.Tranquility.Models.ChatResponse
 
-// Lazily initializes the Retrofit instance, which sets up HTTP communication
+// initializes the Retrofit instance, which sets up HTTP communication
 private val retrofit by lazy {
     Retrofit.Builder()
         .baseUrl("https://api.openai.com/") //base url for api

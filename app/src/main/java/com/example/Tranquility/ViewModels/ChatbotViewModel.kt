@@ -1,4 +1,4 @@
-package com.example.Tranquility.viewmodels
+package com.example.Tranquility.ViewModels
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
@@ -9,7 +9,7 @@ import com.example.Tranquility.Models.ChatRequest
 import com.example.Tranquility.network.openAiService
 import kotlinx.coroutines.launch
 
-class ChatbotViewModel : ViewModel() {
+public class ChatbotViewModel : ViewModel() {
 
     val chatMessages = mutableStateListOf<Pair<String, String>>() // Holds chat history
 
