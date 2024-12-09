@@ -18,7 +18,7 @@ class MeditationLogRepository {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             emit(emptyList()) //empty list if we couldn't get the user
-            return@flow
+            return@flow //pipe that sends data to another place one piece at a time and only when needed
         }
 
         val userId = currentUser.uid // gets the current id

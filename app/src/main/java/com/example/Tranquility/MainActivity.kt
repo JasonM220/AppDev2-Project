@@ -21,8 +21,9 @@ import com.example.Tranquility.Screens.RegisterScreen
 import com.example.Tranquility.Screens.TimerWithProgressBar
 import com.example.Tranquility.ViewModels.MeditationLogViewModel
 import com.example.Tranquility.ui.theme.MyApplicationTheme
-import com.example.Tranquility.viewmodels.ChatbotViewModel
+import com.example.Tranquility.ViewModels.ChatbotViewModel
 import com.google.firebase.FirebaseApp
+
 
 class MainActivity : ComponentActivity() {
     // Initializes our database
@@ -102,7 +103,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopNavBar(navController = navController, onLogout = {
-                            navController.navigate(Screen.Chat.route) {
+                            navController.navigate(Screen.Login.route) {
                                 popUpTo(Screen.Login.route) { inclusive = true }
                             }
                         })
