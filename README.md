@@ -11,7 +11,7 @@
 - **AI Meditation Assistant**: Provides additional guidance and support for your meditation sessions, including personalized advice and tips.
 - **Modern User Interface**: Built using Kotlin and Jetpack Compose for a clean and intuitive experience.
 
-- ## Technologies Used
+## Technologies Used
 
 - **Kotlin**: Programming language used to build the app.
 - **Jetpack Compose**: UI toolkit used for building a responsive and modern UI.
